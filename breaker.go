@@ -99,8 +99,6 @@ type Config struct {
 	Timeout       time.Duration
 	ReadyToTrip   func(counts Counts) bool
 	OnStateChange func(name string, from State, to State)
-
-	// TODO: Add observability metrics here.
 }
 
 type CircuitBreaker struct {
