@@ -6,8 +6,13 @@ import (
 	"time"
 )
 
-const defaultInterval = time.Duration(0) * time.Second
-const defaultTimeout = time.Duration(60) * time.Second
+const (
+	defaultInterval = time.Duration(0) * time.Second
+	defaultTimeout  = time.Duration(60) * time.Second
+
+	defaultMaxRequests            = uint32(1)
+	defaultMaxConsecutiveFailures = uint32(5)
+)
 
 // State is a type that represents a state of CircuitBreaker.
 type State int
@@ -67,7 +72,7 @@ func (c *Counts) clear() {
 }
 
 func defaultReadyToTrip(counts Counts) bool {
-	return counts.ConsecutiveFailures > 5
+	return counts.ConsecutiveFailures > defaultMaxConsecutiveFailures
 }
 
 // Config configures CircuitBreaker:
@@ -127,7 +132,7 @@ func NewCircuitBreaker(st Config) *CircuitBreaker {
 	// Set maxRequests to 1 if it is not set
 	cb.maxRequests = st.MaxRequests
 	if st.MaxRequests == 0 {
-		cb.maxRequests = 1
+		cb.maxRequests = defaultMaxRequests
 	}
 
 	// Set interval to defaultInterval if it is not set
